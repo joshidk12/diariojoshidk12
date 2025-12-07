@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestro Diario de Amor</title>
+    <style>
+        /* ESTILOS DEL DIARIO */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                        url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            color: #5d4037;
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .diario-container {
+            max-width: 800px;
+            width: 100%;
+            background: #fffaf0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 8px solid #8b4513;
+            position: relative;
+            animation: aparecer 1.5s ease-out;
+        }
+
+        /* Portada del diario */
+        .portada {
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            padding: 50px 30px;
+            text-align: center;
+            color: white;
+            border-bottom: 3px solid #654321;
+            position: relative;
+        }
+
+        .portada h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+        }
+
+        .portada p {
+            font-size: 1.3rem;
+            color: #ffecb3;
+            font-style: italic;
+            margin-bottom: 25px;
+        }
+
+        .candado {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: #ffd700;
+            animation: latido 2s infinite;
+        }
+
+        /* Contenido del diario */
+        .contenido {
+            padding: 40px;
+            background: #fffef7;
+            position: relative;
+            min-height: 600px;
+        }
+
+        .contenido::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.08"><line x1="0" y1="25" x2="100" y2="25" stroke="%239c27b0" stroke-width="1"/></svg>');
+            pointer-events: none;
+        }
+
+        /* Secciones */
+        .seccion {
+            margin-bottom: 50px;
+            padding-bottom: 40px;
+            border-bottom: 2px dashed #ff8fa3;
+            position: relative;
+            z-index: 1;
+        }
+
+        .seccion:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .seccion h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #9c27b0;
+            margin-bottom: 25px;
+            padding-left: 20px;
+            border-left: 5px solid #ff6b9d;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .numero-seccion {
+            background: #ff6b9d;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 8px rgba(255, 107, 157, 0.3);
+        }
+
+        /* Listas */
+        .lista-amor {
+            list-style: none;
+            padding-left: 30px;
+        }
+
+        .lista-amor li {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 182, 193, 0.15);
+            border-radius: 12px;
+            border-left: 4px solid #ff6b9d;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #5d4037;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lista-amor li:hover {
+            transform: translateX(10px);
+            background: rgba(255, 182, 193, 0.25);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .lista-amor li::before {
+            content: "❤️";
+            margin-right: 15px;
+            font-size: 1.5rem;
+            animation: latido 2s infinite;
+            animation-delay: calc(var(--i) * 0.2s);
+        }
+
+        /* Promesas */
+        .promesas {
+            list-style: none;
+            padding-left: 30px;
+        }
+
+        .promesas li {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255, 248, 225, 0.9), rgba(255, 241, 200, 0.9));
+            border-radius: 15px;
+            border: 2px solid #ffd54f;
+            font-size: 1.25rem;
+            line-height: 1.7;
+            color: #5d4037;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(255, 213, 79, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .promesas li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(255, 213, 79, 0.3);
+            border-color: #ffb300;
+        }
+
+        .promesas li strong {
+            color: #d84315;
+            font-size: 1.3rem;
+            display: block;
+            margin-bottom: 8px;
+            font-family: 'Cedarville Cursive', cursive;
+        }
+
+        .promesas li::before {
+            content: "🤍";
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 2px solid #ff6b9d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Decoraciones */
+        .decoracion {
+            text-align: center;
+            margin: 40px 0;
+            opacity: 0.8;
+        }
+
+        .corazon-decorativo {
+            font-size: 4rem;
+            animation: flotar 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.5));
+        }
+
+        .texto-decorativo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #ff6b9d;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        /* Firma */
+        .firma {
+            text-align: right;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 3px double #9c27b0;
+        }
+
+        .firma p {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #9c27b0;
+        }
+
+        .fecha {
+            font-style: italic;
+            color: #888;
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Corazones flotantes */
+        .corazones-flotantes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .corazon-flotante {
+            position: absolute;
+            color: rgba(255, 107, 157, 0.6);
+            animation: flotarArriba 5s linear forwards;
+            font-size: 20px;
+        }
+
+        /* ANIMACIONES */
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes latido {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes flotar {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        @keyframes flotarArriba {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .diario-container {
+                margin: 20px;
+                border-width: 5px;
+            }
+            
+            .portada h1 {
+                font-size: 2.5rem;
+            }
+            
+            .contenido {
+                padding: 25px;
+            }
+            
+            .seccion h2 {
+                font-size: 2.2rem;
+            }
+            
+            .lista-amor li,
+            .promesas li {
+                font-size: 1.1rem;
+            }
+            
+            .firma p {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Corazones flotantes en fondo -->
+    <div class="corazones-flotantes" id="corazonesContainer"></div>
+
+    <div class="diario-container">
+        <!-- Portada -->
+        <div class="portada">
+            <div class="candado">🔐</div>
+            <h1>Nuestro Diario</h1>
+            <p>Páginas de lo que siento por ti</p>
+            <div class="decoracion">
+                <div class="corazon-decorativo">💖</div>
+            </div>
+        </div>
+
+        <!-- Contenido -->
+        <div class="contenido">
+            <!-- Sección 1 -->
+            <div class="seccion">
+                <h2><span class="numero-seccion">1</span> Lo que más amo de ti</h2>
+                <ul class="lista-amor">
+                    <li style="--i: 1">Tu sonrisa ilumina mi mundo</li>
+                    <li style="--i: 2">Tu forma de apoyarme incondicionalmente</li>
+                    <li style="--i: 3">Cómo me haces reír hasta llorar</li>
+                    <li style="--i: 4">Tu bondad con todos</li>
+                    <li style="--i: 5">Esos pequeños gestos que solo tú haces</li>
+                    <li style="--i: 6">Cómo entendemos el mundo de forma similar</li>
+                    <li style="--i: 7">Tu determinación y fuerza interior</li>
+                    <li style="--i: 8">Esa mirada que lo dice todo</li>
+                </ul>
+            </div>
+
+            <!-- Sección 2 -->
+            <div class="seccion">
+                <h2><span class="numero-seccion">2</span> Promesas de amor</h2>
+                <ul class="promesas">
+                    <li><strong>Prometo escucharte siempre, incluso en el silencio</strong></li>
+                    <li><strong>Prometo amarte muuuuuuucho, con toda mi alma, mi amor</strong></li>
+                    <li><strong>Prometo ser tu refugio en los días difíciles</strong></li>
+                    <li><strong>Prometo celebrar cada logro tuyo como si fuera mío</strong></li>
+                    <li><strong>Prometo que dare todo de mi para que finalmente estemos juntitos</strong></li>
+                </ul>
+            </div>
+
+            <!-- Decoración final -->
+            <div class="decoracion">
+                <div class="corazon-decorativo">📖</div>
+                <div class="texto-decorativo">Una ultima cosita..</div>
+                <p>Mi amor, se que hemos pasado buenos, malos, extraños
+                   e chistosos ratos, y juro que por todo eso, jamas
+                   dejare de amarte, por que tu haces lo que nadie nunca
+                   pudo hacer, hacerme sentirme amado, gracias por ser
+                   mi chikita linda, mi charlis, mi lizbeth, mi chilito pro 
+                                         "Te amo"
+                </p>
+            </div>
+
+            <!-- Firma -->
+            <div class="firma">
+                <p>Con amor eterno,</p>
+                <p style="font-size: 2.8rem; color: #ff6b9d;">Josué Enrique</p>
+                <p class="fecha" id="fecha-hoy"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fecha actual
+        const fecha = new Date();
+        const opciones = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        };
+        document.getElementById('fecha-hoy').textContent = 
+            `Hoy, ${fecha.toLocaleDateString('es-ES', opciones)}`;
+
+        // Corazones flotantes
+        function crearCorazon() {
+            const corazon = document.createElement('div');
+            corazon.className = 'corazon-flotante';
+            corazon.innerHTML = '❤️';
+            
+            corazon.style.left = Math.random() * 100 + 'vw';
+            corazon.style.fontSize = (Math.random() * 25 + 15) + 'px';
+            corazon.style.opacity = Math.random() * 0.5 + 0.3;
+            corazon.style.animationDuration = (Math.random() * 4 + 3) + 's';
+            corazon.style.color = `rgba(255, ${Math.random() * 100 + 107}, ${Math.random() * 100 + 157}, ${Math.random() * 0.5 + 0.3})`;
+            
+            document.getElementById('corazonesContainer').appendChild(corazon);
+            
+            setTimeout(() => {
+                if (corazon.parentNode) {
+                    corazon.parentNode.removeChild(corazon);
+                }
+            }, 5000);
+        }
+        
+        setInterval(crearCorazon, 400);
+
+        // Efecto al pasar el mouse sobre los items
+        document.querySelectorAll('.lista-amor li, .promesas li').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(15px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+
+        // Mensaje secreto en consola
+        console.log('%c💖 Diario de Amor 💖', 'color: #ff6b9d; font-size: 24px; font-weight: bold;');
+        console.log('%cEsta página contiene todo lo que siento por ti.', 'color: #9c27b0; font-size: 16px;');
+    </script>
+</body>
+</html>
